@@ -3,13 +3,9 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
-const gitCommitSha =
-    process.env.VITE_VERCEL_GIT_COMMIT_SHA ?? process.env.VITE_GIT_COMMIT_SHA;
-
+const gitCommitSha = process.env.VITE_GIT_COMMIT_SHA;
 const version = gitCommitSha?.slice(0, 7) ?? process.env.npm_package_version;
-
-const environment =
-    process.env.VITE_VERCEL_ENV ?? process.env.NODE_ENV ?? 'development';
+const environment = process.env.NODE_ENV ?? 'development';
 
 // https://vite.dev/config/
 export default defineConfig({
