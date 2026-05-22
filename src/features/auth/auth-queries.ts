@@ -1,23 +1,29 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 
+interface SignInVariables {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+}
+
 export function useSignIn() {
     return useMutation({
-        mutationFn: (values: {
-            email: string;
-            password: string;
-            rememberMe: boolean;
-        }) => authClient.signIn.email(values),
+        mutationFn: (values: SignInVariables) =>
+            authClient.signIn.email(values),
     });
+}
+
+interface SignUpVariables {
+    email: string;
+    password: string;
+    name: string;
 }
 
 export function useSignUp() {
     return useMutation({
-        mutationFn: (values: {
-            email: string;
-            password: string;
-            name: string;
-        }) => authClient.signUp.email(values),
+        mutationFn: (values: SignUpVariables) =>
+            authClient.signUp.email(values),
     });
 }
 
@@ -65,14 +71,14 @@ export function useForgotPassword() {
     });
 }
 
+interface ResetPasswordVariables {
+    newPassword: string;
+    token: string;
+}
+
 export function useResetPassword() {
     return useMutation({
-        mutationFn: ({
-            newPassword,
-            token,
-        }: {
-            newPassword: string;
-            token: string;
-        }) => authClient.resetPassword({ newPassword, token }),
+        mutationFn: ({ newPassword, token }: ResetPasswordVariables) =>
+            authClient.resetPassword({ newPassword, token }),
     });
 }

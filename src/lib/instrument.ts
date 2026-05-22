@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import { config, version, environment } from '@/lib/config';
+import { config } from '@/lib/config';
 
 export function init() {
     if (!config.VITE_SENTRY_DSN) {
@@ -8,8 +8,7 @@ export function init() {
 
     Sentry.init({
         dsn: config.VITE_SENTRY_DSN,
-        release: version,
-        environment,
+        release: config.VITE_APP_VERSION,
         sendDefaultPii: true,
         integrations: [Sentry.browserTracingIntegration()],
         tracePropagationTargets: [config.VITE_API_URL],

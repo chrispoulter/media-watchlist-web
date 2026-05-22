@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function MediaCardSkeleton() {
     return (
-        <div className="bg-card flex flex-row overflow-hidden rounded-xl border shadow-sm">
+        <div className="flex flex-row overflow-hidden rounded-xl border bg-card shadow-sm">
             <Skeleton className="h-60 w-40 shrink-0 rounded-none" />
             <div className="flex flex-1 flex-col gap-3 p-4">
                 <Skeleton className="h-5 w-3/4" />

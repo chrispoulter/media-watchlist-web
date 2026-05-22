@@ -6,21 +6,13 @@ declare global {
     }
 }
 
-const gitCommitSha =
-    import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA ??
-    import.meta.env.VITE_GIT_COMMIT_SHA;
-
-export const version = gitCommitSha?.slice(0, 7) ?? __APP_VERSION__;
-
-export const environment =
-    import.meta.env.VITE_VERCEL_ENV ?? import.meta.env.MODE ?? 'development';
-
 const configSchema = z.object({
     VITE_API_URL: z.url(),
     VITE_SENTRY_DSN: z.url().optional(),
+    VITE_APP_VERSION: z.string(),
 });
 
 export const config = configSchema.parse({
-    ...window.__ENV__,
     ...import.meta.env,
+    ...window.__ENV__,
 });

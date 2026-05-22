@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 
-export const profileKeys = {
-    accounts: ['profile', 'accounts'] as const,
+const profileKeys = {
+    all: ['profile'] as const,
 };
 
 export function useAccounts() {
     return useQuery({
-        queryKey: profileKeys.accounts,
+        queryKey: profileKeys.all,
         queryFn: async () => {
             const { data, error } = await authClient.listAccounts();
 
@@ -83,7 +83,7 @@ export function useLinkSocial() {
         // NOTE: linkSocial redirects for OAuth; onSuccess only fires on error paths.
         // Successful link re-fetches naturally when callbackURL remounts the page.
         onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: profileKeys.accounts }),
+            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
 }
 
@@ -93,7 +93,7 @@ export function useUnlinkAccount() {
         mutationFn: (providerId: string) =>
             authClient.unlinkAccount({ providerId }),
         onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: profileKeys.accounts }),
+            queryClient.invalidateQueries({ queryKey: profileKeys.all }),
     });
 }
 

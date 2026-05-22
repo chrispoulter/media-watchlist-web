@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { MediaCardSkeleton } from '@/components/media-card-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';

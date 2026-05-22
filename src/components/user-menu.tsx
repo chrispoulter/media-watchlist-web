@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -41,7 +41,7 @@ export function UserMenu() {
                     <p className="truncate text-sm font-medium">
                         {session?.user?.name}
                     </p>
-                    <p className="text-muted-foreground truncate text-xs">
+                    <p className="truncate text-xs text-muted-foreground">
                         {session?.user?.email}
                     </p>
                 </div>

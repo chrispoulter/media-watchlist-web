@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { Metadata } from '@/components/metadata';
 
 interface ErrorPageProps {
     resetError: () => void;
@@ -16,7 +17,7 @@ interface ErrorPageProps {
 export function ErrorPage({ resetError }: ErrorPageProps) {
     return (
         <>
-            <title>Error | Media Watchlist</title>
+            <Metadata title="Error" />
             <div className="flex flex-1 items-center justify-center">
                 <div className="w-full max-w-sm">
                     <Card>

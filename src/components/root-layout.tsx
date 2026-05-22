@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import { ErrorBoundary } from '@sentry/react';
 import { ErrorPage } from '@/pages/error-page';
 import { Header } from './header';
@@ -9,7 +9,7 @@ export function RootLayout() {
     useSentryUser();
 
     return (
-        <div className="bg-background flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col bg-background">
             <Header />
             <main className="container mx-auto flex flex-1 flex-col px-4 py-8">
                 <ErrorBoundary

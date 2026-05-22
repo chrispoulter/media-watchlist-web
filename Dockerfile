@@ -4,6 +4,8 @@ COPY package*.json ./
 RUN npm ci
 
 FROM deps AS build
+ARG GIT_COMMIT_SHA
+ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
 COPY . .
 RUN npm run build
 

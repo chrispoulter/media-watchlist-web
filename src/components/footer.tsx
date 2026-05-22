@@ -1,11 +1,11 @@
-import { version } from '@/lib/config';
+import { config } from '@/lib/config';
 
 export function Footer() {
     return (
         <footer className="border-t py-4">
-            <div className="text-muted-foreground container mx-auto flex items-center justify-between px-4 text-sm">
+            <div className="container mx-auto flex items-center justify-between px-4 text-sm text-muted-foreground">
                 <span>&copy; Chris Poulter {new Date().getFullYear()}</span>
-                <span>v{version}</span>
+                <span>v{config.VITE_APP_VERSION}</span>
             </div>
         </footer>
     );

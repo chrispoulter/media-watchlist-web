@@ -1,14 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from 'next-themes';
 import { ErrorBoundary } from '@sentry/react';
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/components/theme-provider.tsx';
 import { queryClient } from '@/lib/query-client';
 import { init } from '@/lib/instrument';
 import App from './app.tsx';
+
 import './index.css';
 
 init();
@@ -17,12 +18,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
+                <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
                     <ErrorBoundary
                         fallback={
                             <div className="flex min-h-screen items-center justify-center p-8 text-center">
@@ -35,9 +31,9 @@ createRoot(document.getElementById('root')!).render(
                     >
                         <App />
                     </ErrorBoundary>
+                    <Toaster invert />
                 </ThemeProvider>
             </BrowserRouter>
-            <Toaster invert />
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     </StrictMode>

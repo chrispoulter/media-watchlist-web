@@ -23,7 +23,7 @@ export function MediaCard({
         mediaType === 'tv' ? '/default-tv-show.svg' : '/default-movie.svg';
 
     return (
-        <div className="bg-card text-card-foreground flex flex-row overflow-hidden rounded-xl border shadow-sm">
+        <div className="flex flex-row overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm">
             <img
                 src={posterUrl || fallback}
                 alt={title}
@@ -35,7 +35,7 @@ export function MediaCard({
             <div className="flex flex-col gap-3 p-4">
                 <h3 className="line-clamp-1 font-semibold">{title}</h3>
                 {year && <Badge variant="secondary">{year}</Badge>}
-                <p className="text-muted-foreground line-clamp-3 text-sm">
+                <p className="line-clamp-3 text-sm text-muted-foreground">
                     {overview}
                 </p>
                 <div className="mt-auto">{actions}</div>

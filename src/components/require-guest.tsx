@@ -1,6 +1,6 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router';
+import { Spinner } from '@/components/ui/spinner';
 import { authClient } from '@/lib/auth-client';
-import { Spinner } from './ui/spinner';
 
 export function RequireGuest() {
     const { data: session, isPending } = authClient.useSession();
@@ -8,7 +8,7 @@ export function RequireGuest() {
     if (isPending) {
         return (
             <div className="flex flex-1 items-center justify-center">
-                <Spinner className="text-muted-foreground h-6 w-6" />
+                <Spinner className="h-6 w-6 text-muted-foreground" />
             </div>
         );
     }

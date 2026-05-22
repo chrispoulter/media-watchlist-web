@@ -7,6 +7,9 @@ services:
             VITE_API_URL: http://localhost:3000
         ports:
             - 5173:80
+        depends_on:
+            media-watchlist-api:
+                condition: service_healthy
 
     media-watchlist-api:
         image: media-watchlist-api:latest
@@ -27,6 +30,19 @@ services:
             LOG_LEVEL: info
         ports:
             - 3000:3000
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'wget',
+                    '--spider',
+                    '-q',
+                    'http://localhost:3000/health',
+                ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
         depends_on:
             postgres:
                 condition: service_healthy
@@ -60,9 +76,10 @@ services:
         restart: always
         healthcheck:
             test: ['CMD', 'pg_isready']
-            interval: 10s
+            interval: 30s
             timeout: 5s
-            retries: 3
+            retries: 5
+            start_period: 30s
 
     mailpit:
         image: axllent/mailpit:v1.22.3
