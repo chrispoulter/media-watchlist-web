@@ -59,7 +59,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`. API requests are proxied to `VITE_API_URL` during development.
+The app will be available at `http://localhost:5173`. API requests are directed to `VITE_API_URL` during development.
 
 ## Environment Variables
 
@@ -83,11 +83,11 @@ The app will be available at `http://localhost:5173`. API requests are proxied t
 
 `docker compose up` starts the full stack:
 
-| Service          | URL                   |
-| ---------------- | --------------------- |
-| Frontend (nginx) | http://localhost:5173 |
-| API              | http://localhost:3000 |
-| Mailpit UI       | http://localhost:8025 |
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:5173 |
+| API      | http://localhost:3000 |
+| Mailpit  | http://localhost:8025 |
 
 Create a `.env` file in the project root with the required secrets before starting:
 
@@ -123,31 +123,21 @@ At container startup, `VITE_API_URL` is injected into `env.js` by the entrypoint
 
 ## CI/CD
 
-A single GitHub Actions workflow (`ci.yml`) runs on every push and pull request across all branches.
-
-| Step         | Command                |
-| ------------ | ---------------------- |
-| Type check   | `npx tsc --noEmit`     |
-| Lint         | `npm run lint`         |
-| Format check | `npm run format:check` |
-
-No secrets or deployment steps are configured.
+A single CI workflow runs on every push and pull request to any branch. It type checks, lints, and builds the project using Node.js 24.
 
 ## Project Structure
 
 ```
 src/
-├── lib/                    # ky client, better-auth singleton, utilities
+├── lib/                    # API client, better-auth singleton, utilities
 ├── types/                  # shared TypeScript types
 ├── components/
 │   ├── ui/                 # shadcn/ui generated components
-│   └── ...                 # layout, route guards, shared UI
-├── pages/
-│   ├── auth/               # login, register, two-factor, forgot/reset password
-│   └── profile/            # profile, security, and danger zone tabs
+│   └── ...                 # layout, route guards, header, shared UI
+├── pages/                  # error and not-found fallback pages
 └── features/
-    ├── auth/               # form components + React Query hooks
-    ├── profile/            # profile forms, linked accounts, 2FA settings
+    ├── auth/               # login, register, two-factor, forgot/reset password
+    ├── profile/            # profile info, security (2FA settings), danger zone
     ├── watchlist/          # React Query hooks, grid, item cards
     └── search/             # debounced search bar, result cards
 ```
