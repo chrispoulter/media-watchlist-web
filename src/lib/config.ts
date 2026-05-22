@@ -9,7 +9,6 @@ declare global {
 const configSchema = z.object({
     VITE_API_URL: z.url(),
     VITE_APP_VERSION: z.string(),
-    VITE_APP_ENVIRONMENT: z.string(),
 });
 
 export const config = configSchema.parse({
