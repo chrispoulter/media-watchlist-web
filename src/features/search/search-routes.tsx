@@ -1,6 +1,11 @@
+/* eslint-disable react-refresh/only-export-components */
+import { lazy } from 'react';
 import { Route } from 'react-router';
 import { RequireAuth } from '@/components/require-auth';
-import { SearchPage } from './search-page';
+
+const SearchPage = lazy(() =>
+    import('./search-page').then((m) => ({ default: m.SearchPage }))
+);
 
 export const searchRoutes = (
     <Route element={<RequireAuth />}>

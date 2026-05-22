@@ -4,8 +4,22 @@ server {
 
     access_log  /var/log/nginx/server.access.log  main;
 
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml font/woff2;
+    gzip_min_length 1024;
+    gzip_vary on;
+
+    # Versioned assets — long cache (Vite hashes filenames)
+    location /assets/ {
+        root /usr/share/nginx/html;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # HTML — never cache (SPA shell must always be fresh)
     location / {
         root /usr/share/nginx/html;
         try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 }
