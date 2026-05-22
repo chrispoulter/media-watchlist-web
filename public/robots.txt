@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://media-watchlist.example.com/sitemap.xml
