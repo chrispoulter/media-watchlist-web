@@ -12,6 +12,6 @@ export function init() {
         sendDefaultPii: true,
         integrations: [Sentry.browserTracingIntegration()],
         tracePropagationTargets: [config.VITE_API_URL],
-        tracesSampleRate: 1.0,
+        tracesSampleRate: 0.1,
     });
 }
