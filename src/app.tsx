@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Routes, Route } from 'react-router';
 import { RootLayout } from '@/components/root-layout';
 import { NotFoundPage } from '@/pages/not-found-page';
@@ -9,16 +8,14 @@ import { watchlistRoutes } from '@/features/watchlist/watchlist-routes';
 
 export default function App() {
     return (
-        <Suspense>
-            <Routes>
-                <Route element={<RootLayout />}>
-                    {authRoutes}
-                    {profileRoutes}
-                    {searchRoutes}
-                    {watchlistRoutes}
-                    <Route path="*" element={<NotFoundPage />} />
-                </Route>
-            </Routes>
-        </Suspense>
+        <Routes>
+            <Route element={<RootLayout />}>
+                {authRoutes}
+                {profileRoutes}
+                {searchRoutes}
+                {watchlistRoutes}
+                <Route path="*" element={<NotFoundPage />} />
+            </Route>
+        </Routes>
     );
 }
