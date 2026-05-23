@@ -31,7 +31,7 @@ export function MediaCard({
                 onError={(e) => {
                     e.currentTarget.src = fallback;
                 }}
-                className="h-60 w-40 object-cover"
+                className="h-60 w-40 shrink-0 object-cover"
             />
             <div className="flex flex-col gap-3 p-4">
                 <h2 className="line-clamp-1 font-semibold">{title}</h2>
