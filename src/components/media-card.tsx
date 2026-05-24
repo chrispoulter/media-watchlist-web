@@ -27,13 +27,14 @@ export function MediaCard({
             <img
                 src={posterUrl || fallback}
                 alt={title}
+                loading="lazy"
                 onError={(e) => {
                     e.currentTarget.src = fallback;
                 }}
-                className="h-60 w-40 object-cover"
+                className="h-60 w-40 shrink-0 object-cover"
             />
             <div className="flex flex-col gap-3 p-4">
-                <h3 className="line-clamp-1 font-semibold">{title}</h3>
+                <h2 className="line-clamp-1 font-semibold">{title}</h2>
                 {year && <Badge variant="secondary">{year}</Badge>}
                 <p className="line-clamp-3 text-sm text-muted-foreground">
                     {overview}
