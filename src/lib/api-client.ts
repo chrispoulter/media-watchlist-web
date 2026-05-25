@@ -3,9 +3,9 @@ import { authClient } from '@/lib/auth-client';
 import { queryClient } from '@/lib/query-client';
 import { config } from '@/lib/config';
 
-type ApiError = {
+interface ApiError {
     error?: string;
-};
+}
 
 export const apiClient = ky.create({
     prefix: config.VITE_API_URL,
