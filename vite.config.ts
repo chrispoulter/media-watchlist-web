@@ -3,7 +3,11 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
-const gitCommitSha = process.env.GIT_COMMIT_SHA || undefined;
+const gitCommitSha =
+    process.env.VITE_VERCEL_GIT_COMMIT_SHA ||
+    process.env.GIT_COMMIT_SHA ||
+    undefined;
+    
 const version = gitCommitSha?.slice(0, 7) ?? process.env.npm_package_version;
 
 // https://vite.dev/config/
