@@ -1,6 +1,6 @@
 {
     "name": "Media Watchlist",
-    "short_name": "Watchlist",
+    "short_name": "Media Watchlist",
     "description": "Track movies and TV shows you want to watch",
     "start_url": "/",
     "display": "standalone",
