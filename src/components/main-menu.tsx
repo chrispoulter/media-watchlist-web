@@ -1,18 +1,11 @@
-import { Link, NavLink } from 'react-router';
-import { Menu } from 'lucide-react';
+import { NavLink } from 'react-router';
+import { ListVideo, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import { authClient } from '@/lib/auth-client';
 
 const navItems = [
-    { to: '/', label: 'Watchlist' },
-    { to: '/search', label: 'Search' },
+    { to: '/', label: 'Watchlist', icon: ListVideo },
+    { to: '/search', label: 'Search', icon: Search },
 ];
 
 export function MainMenu() {
@@ -23,40 +16,20 @@ export function MainMenu() {
     }
 
     return (
-        <>
-            <nav className="hidden items-center gap-1 sm:flex">
-                {navItems.map(({ to, label }) => (
-                    <NavLink
-                        key={to}
-                        to={to}
-                        className={({ isActive }) =>
-                            cn(
-                                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-                                isActive
-                                    ? 'bg-secondary text-secondary-foreground'
-                                    : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
-                            )
-                        }
-                    >
-                        {label}
+        <nav className="flex items-center gap-1">
+            {navItems.map(({ to, label, icon: Icon }) => (
+                <Button
+                    key={to}
+                    variant="ghost"
+                    asChild
+                    className="aria-[current=page]:bg-secondary aria-[current=page]:text-secondary-foreground"
+                >
+                    <NavLink to={to}>
+                        <Icon className="sm:hidden" />
+                        <span className="sr-only sm:not-sr-only">{label}</span>
                     </NavLink>
-                ))}
-            </nav>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="sm:hidden">
-                        <Menu className="h-5 w-5" />
-                        <span className="sr-only">Toggle menu</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    {navItems.map(({ to, label }) => (
-                        <DropdownMenuItem key={to} asChild>
-                            <Link to={to}>{label}</Link>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </>
+                </Button>
+            ))}
+        </nav>
     );
 }
