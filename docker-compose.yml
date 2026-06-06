@@ -45,10 +45,10 @@ services:
                 condition: service_started
 
     media-watchlist-migrate:
-        image: media-watchlist-api:migrator
+        image: media-watchlist-api:latest
         build:
             context: ../media-watchlist-api
-            target: migrator
+        command: node dist/src/db/migrate.js
         environment:
             DATABASE_URL: postgresql://postgres:password@postgres:5432/media_watchlist
         depends_on:
