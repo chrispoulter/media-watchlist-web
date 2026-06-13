@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')!).render(
                     >
                         <App />
                     </ErrorBoundary>
-                    <Toaster invert />
+                    <Toaster richColors />
                 </ThemeProvider>
             </BrowserRouter>
             <ReactQueryDevtools initialIsOpen={false} />
