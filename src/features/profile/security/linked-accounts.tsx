@@ -5,7 +5,7 @@ import { authProviders } from '@/lib/auth-providers';
 import { useLinkSocial, useUnlinkAccount } from '../profile-queries';
 
 interface LinkedAccountsProps {
-    accounts: { providerId: string }[];
+    accounts: { id: string; providerId: string }[];
 }
 
 export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
@@ -18,7 +18,7 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
     const {
         mutateAsync: unlinkAccount,
         isPending: isUnlinking,
-        variables: unlinkingProvider,
+        variables: unlinkVariables,
     } = useUnlinkAccount();
 
     const isLinked = (providerId: string) =>
@@ -29,8 +29,12 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
 
     const handleConnect = (providerId: string) => linkSocial(providerId);
 
-    const handleDisconnect = async (providerId: string, label: string) => {
-        const { error } = await unlinkAccount(providerId);
+    const handleDisconnect = async (
+        accountId: string,
+        providerId: string,
+        label: string
+    ) => {
+        const { error } = await unlinkAccount({ accountId, providerId });
 
         if (error) {
             toast.error(
@@ -45,12 +49,16 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
     return (
         <div className="space-y-4">
             {authProviders.map((provider) => {
+                const linkedAccount = accounts?.find(
+                    (a) => a.providerId === provider.id
+                );
                 const linked = isLinked(provider.id);
                 const unlinkable = canUnlink(provider.id);
 
                 const inFlight =
                     (isLinking && linkingProvider === provider.id) ||
-                    (isUnlinking && unlinkingProvider === provider.id);
+                    (isUnlinking &&
+                        unlinkVariables?.providerId === provider.id);
 
                 return (
                     <div
@@ -77,9 +85,13 @@ export function LinkedAccounts({ accounts }: LinkedAccountsProps) {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                disabled={inFlight || !unlinkable}
+                                disabled={
+                                    inFlight || !unlinkable || !linkedAccount
+                                }
                                 onClick={() =>
+                                    linkedAccount &&
                                     handleDisconnect(
+                                        linkedAccount.id,
                                         provider.id,
                                         provider.label
                                     )

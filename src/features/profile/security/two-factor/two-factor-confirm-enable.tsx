@@ -42,8 +42,8 @@ export function TwoFactorConfirmEnable({
             return;
         }
 
-        if (result.data?.totpURI) {
-            onTotpSetup(result.data.totpURI, result.data.backupCodes ?? []);
+        if (result.data && result.data.method === 'totp') {
+            onTotpSetup(result.data.totpURI, result.data.backupCodes);
         }
     };
 
