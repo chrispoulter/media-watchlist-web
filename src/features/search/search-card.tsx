@@ -6,10 +6,10 @@ import {
     useAddToWatchlist,
     useRemoveFromWatchlist,
 } from '@/features/watchlist/watchlist-queries';
-import type { SearchResult } from '@/types';
+import type { SearchResponse } from './search-queries';
 
 interface SearchCardProps {
-    result: SearchResult;
+    result: SearchResponse[number];
 }
 
 function SearchCardComponent({ result }: SearchCardProps) {

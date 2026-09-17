@@ -3,7 +3,7 @@ import { authClient } from '@/lib/auth-client';
 import { queryClient } from '@/lib/query-client';
 import { config } from '@/lib/config';
 
-interface ApiError {
+interface ErrorResponse {
     error?: string;
 }
 
@@ -25,7 +25,7 @@ export const apiClient = ky.create({
         beforeError: [
             async ({ error }) => {
                 if (error instanceof HTTPError) {
-                    const body = error.data as ApiError;
+                    const body = error.data as ErrorResponse;
                     error.message = body?.error || error.message;
                 }
                 return error;

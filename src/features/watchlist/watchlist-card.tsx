@@ -2,11 +2,13 @@ import { memo, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MediaCard } from '@/components/media-card';
-import type { WatchlistItem } from '@/types';
-import { useRemoveFromWatchlist } from './watchlist-queries';
+import {
+    useRemoveFromWatchlist,
+    type WatchlistResponse,
+} from './watchlist-queries';
 
 interface WatchlistCardProps {
-    item: WatchlistItem;
+    item: WatchlistResponse[number];
 }
 
 export function WatchlistCardComponent({ item }: WatchlistCardProps) {
