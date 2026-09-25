@@ -62,7 +62,7 @@ export function useAddToWatchlist() {
         onSuccess: (data, variables) => {
             queryClient.setQueryData<WatchlistResponse>(
                 watchlistKeys.all,
-                (old) => (old ? [...old, data] : [data])
+                (old) => (old ? [...old, data] : old)
             );
 
             queryClient.setQueriesData<SearchResponse>(
@@ -74,6 +74,25 @@ export function useAddToWatchlist() {
                             ? { ...r, watchlistItemId: data.id }
                             : r
                     )
+            );
+        },
+    });
+}
+
+export function useReorderWatchlist() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        // Run reorders one at a time so the last drop is always the last write
+        scope: { id: 'watchlist-reorder' },
+        mutationFn: (items: WatchlistResponse) =>
+            apiClient.put('/api/watchlist/order', {
+                json: { ids: items.map((item) => item.id) },
+            }),
+        onMutate: (items) => {
+            queryClient.setQueryData<WatchlistResponse>(
+                watchlistKeys.all,
+                items
             );
         },
     });

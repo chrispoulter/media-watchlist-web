@@ -1,4 +1,7 @@
 import { Link } from 'react-router';
+import { DragDropProvider, type DragEndEvent } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MediaCardSkeleton } from '@/components/media-card-skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -10,10 +13,28 @@ import {
     EmptyTitle,
 } from '@/components/ui/empty';
 import { WatchlistCard } from './watchlist-card';
-import { useWatchlist } from './watchlist-queries';
+import { useReorderWatchlist, useWatchlist } from './watchlist-queries';
 
 export function WatchlistGrid() {
     const { data: items, isLoading, error } = useWatchlist();
+    const { mutate: reorderWatchlist } = useReorderWatchlist();
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        if (event.canceled || !items) {
+            return;
+        }
+
+        const reordered = move(items, event);
+
+        if (reordered.every((item, index) => item.id === items[index]?.id)) {
+            return;
+        }
+
+        reorderWatchlist(reordered, {
+            onError: (err) =>
+                toast.error(err.message ?? 'Failed to reorder watchlist'),
+        });
+    };
 
     if (isLoading) {
         return (
@@ -56,10 +77,12 @@ export function WatchlistGrid() {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-4">
-            {items.map((item) => (
-                <WatchlistCard key={item.id} item={item} />
-            ))}
-        </div>
+        <DragDropProvider onDragEnd={handleDragEnd}>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-4">
+                {items.map((item, index) => (
+                    <WatchlistCard key={item.id} item={item} index={index} />
+                ))}
+            </div>
+        </DragDropProvider>
     );
 }
