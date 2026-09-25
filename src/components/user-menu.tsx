@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useSignOut } from '@/features/auth/auth-queries';
-import { authClient, canAccessAdmin } from '@/lib/auth-client';
+import { authClient, isAdmin } from '@/lib/auth-client';
 
 export function UserMenu() {
     const navigate = useNavigate();
@@ -49,7 +49,7 @@ export function UserMenu() {
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
                     Profile
                 </DropdownMenuItem>
-                {canAccessAdmin(session.user) && (
+                {isAdmin(session.user) && (
                     <DropdownMenuItem onClick={() => navigate('/admin')}>
                         Admin
                     </DropdownMenuItem>

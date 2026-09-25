@@ -14,12 +14,10 @@ import {
 } from '@/components/ui/dialog';
 import {
     Field,
-    FieldDescription,
     FieldError,
     FieldGroup,
     FieldLabel,
 } from '@/components/ui/field';
-import { authClient, hasPermission } from '@/lib/auth-client';
 import { useUpdateAdminUser, type AdminUser } from '../admin-queries';
 
 const editUserSchema = z.object({
@@ -46,7 +44,7 @@ export function EditUserDialog({
                 <DialogHeader>
                     <DialogTitle>Edit user</DialogTitle>
                     <DialogDescription>
-                        Update the details for this account.
+                        Update the name and email address for this account.
                     </DialogDescription>
                 </DialogHeader>
                 <EditUserForm user={user} onDone={() => onOpenChange(false)} />
@@ -61,10 +59,7 @@ interface EditUserFormProps {
 }
 
 function EditUserForm({ user, onDone }: EditUserFormProps) {
-    const { data: session } = authClient.useSession();
     const { mutateAsync: updateUser, isPending } = useUpdateAdminUser();
-
-    const canSetEmail = hasPermission(session?.user, { user: ['set-email'] });
 
     const form = useForm<EditUserFormValues>({
         resolver: zodResolver(editUserSchema),
@@ -72,15 +67,7 @@ function EditUserForm({ user, onDone }: EditUserFormProps) {
     });
 
     const onSubmit = async (values: EditUserFormValues) => {
-        const emailChanged = canSetEmail && values.email !== user.email;
-
-        const { error } = await updateUser({
-            userId: user.id,
-            data: {
-                name: values.name,
-                ...(emailChanged && { email: values.email }),
-            },
-        });
+        const { error } = await updateUser({ userId: user.id, ...values });
 
         if (error) {
             toast.error(error.message ?? 'Failed to update user');
@@ -126,16 +113,9 @@ function EditUserForm({ user, onDone }: EditUserFormProps) {
                                 id="edit-user-email"
                                 type="email"
                                 autoComplete="off"
-                                readOnly={!canSetEmail}
                                 aria-invalid={fieldState.invalid}
                                 {...field}
                             />
-                            {!canSetEmail && (
-                                <FieldDescription>
-                                    Only administrators can change email
-                                    addresses.
-                                </FieldDescription>
-                            )}
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />
                             )}

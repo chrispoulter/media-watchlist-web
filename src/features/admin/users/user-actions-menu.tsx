@@ -7,7 +7,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { authClient, hasPermission } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import type { AdminUser } from '../admin-queries';
 import { isBanned } from './user-utils';
 import { EditUserDialog } from './edit-user-dialog';
@@ -35,17 +35,9 @@ export function UserActionsMenu({
     const { data: session } = authClient.useSession();
     const [dialog, setDialog] = useState<ActionDialog | null>(null);
 
-    // Staff can't lock themselves out
+    // Admins can't lock themselves out
     const isSelf = session?.user.id === user.id;
     const banned = isBanned(user);
-
-    const currentUser = session?.user;
-    const can = {
-        update: hasPermission(currentUser, { user: ['update'] }),
-        setRole: hasPermission(currentUser, { user: ['set-role'] }),
-        ban: hasPermission(currentUser, { user: ['ban'] }),
-        delete: hasPermission(currentUser, { user: ['delete'] }),
-    };
 
     const dialogProps = (name: ActionDialog) => ({
         user,
@@ -70,44 +62,35 @@ export function UserActionsMenu({
                             <DropdownMenuSeparator />
                         </>
                     )}
-                    {can.update && (
-                        <DropdownMenuItem onClick={() => setDialog('edit')}>
-                            Edit
+                    <DropdownMenuItem onClick={() => setDialog('edit')}>
+                        Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => setDialog('role')}
+                        disabled={isSelf}
+                    >
+                        Change role
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {banned ? (
+                        <DropdownMenuItem onClick={() => setDialog('unban')}>
+                            Unban
                         </DropdownMenuItem>
-                    )}
-                    {can.setRole && (
+                    ) : (
                         <DropdownMenuItem
-                            onClick={() => setDialog('role')}
+                            onClick={() => setDialog('ban')}
                             disabled={isSelf}
                         >
-                            Change roles
+                            Ban
                         </DropdownMenuItem>
                     )}
-                    {(can.ban || can.delete) && <DropdownMenuSeparator />}
-                    {can.ban &&
-                        (banned ? (
-                            <DropdownMenuItem
-                                onClick={() => setDialog('unban')}
-                            >
-                                Unban
-                            </DropdownMenuItem>
-                        ) : (
-                            <DropdownMenuItem
-                                onClick={() => setDialog('ban')}
-                                disabled={isSelf}
-                            >
-                                Ban
-                            </DropdownMenuItem>
-                        ))}
-                    {can.delete && (
-                        <DropdownMenuItem
-                            variant="destructive"
-                            onClick={() => setDialog('remove')}
-                            disabled={isSelf}
-                        >
-                            Delete
-                        </DropdownMenuItem>
-                    )}
+                    <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => setDialog('remove')}
+                        disabled={isSelf}
+                    >
+                        Delete
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 

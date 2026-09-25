@@ -15,7 +15,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useAdminUser } from '../admin-queries';
-import { RoleBadges, StatusBadge } from './user-badges';
+import { RoleBadge, StatusBadge } from './user-badges';
 import { isBanned } from './user-utils';
 import { UserActionsMenu } from './user-actions-menu';
 
@@ -75,8 +75,8 @@ export function UserDetailPage() {
                                         {user.id}
                                     </span>
                                 </DetailItem>
-                                <DetailItem label="Roles">
-                                    <RoleBadges user={user} />
+                                <DetailItem label="Role">
+                                    <RoleBadge user={user} />
                                 </DetailItem>
                                 <DetailItem label="Status">
                                     <StatusBadge user={user} />

@@ -9,11 +9,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { FieldError, FieldGroup } from '@/components/ui/field';
-import { getRoles } from '@/lib/auth-client';
-import type { UserRole } from '@/lib/permissions';
-import { useSetRole, type AdminUser } from '../admin-queries';
-import { RoleCheckboxes } from './role-checkboxes';
+import { Field, FieldLabel } from '@/components/ui/field';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { isAdmin } from '@/lib/auth-client';
+import { useSetRole, type AdminUser, type UserRole } from '../admin-queries';
 
 interface SetRoleDialogProps {
     user: AdminUser;
@@ -30,9 +35,8 @@ export function SetRoleDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Change roles</DialogTitle>
+                    <DialogTitle>Change role</DialogTitle>
                     <DialogDescription>
-                        Moderators can view, rename and ban users.
                         Administrators can manage all user accounts.
                     </DialogDescription>
                 </DialogHeader>
@@ -48,47 +52,48 @@ interface SetRoleFormProps {
 }
 
 function SetRoleForm({ user, onDone }: SetRoleFormProps) {
-    const [selectedRoles, setSelectedRoles] = useState<UserRole[]>(() =>
-        getRoles(user)
+    const [role, setRole] = useState<UserRole>(() =>
+        isAdmin(user) ? 'admin' : 'user'
     );
-    const { mutateAsync: setRole, isPending } = useSetRole();
+    const { mutateAsync: updateRole, isPending } = useSetRole();
 
     const handleSave = async () => {
-        const { error } = await setRole({
-            userId: user.id,
-            role: selectedRoles,
-        });
+        const { error } = await updateRole({ userId: user.id, role });
 
         if (error) {
-            toast.error(error.message ?? 'Failed to change roles');
+            toast.error(error.message ?? 'Failed to change role');
             return;
         }
 
-        toast.success('Roles updated');
+        toast.success('Role updated');
         onDone();
     };
 
     return (
-        <FieldGroup>
-            <RoleCheckboxes
-                idPrefix="set-role"
-                value={selectedRoles}
-                onChange={setSelectedRoles}
-            />
-            {!selectedRoles.length && (
-                <FieldError>Select at least one role</FieldError>
-            )}
+        <>
+            <Field>
+                <FieldLabel htmlFor="set-role">Role</FieldLabel>
+                <Select
+                    value={role}
+                    onValueChange={(value) => setRole(value as UserRole)}
+                >
+                    <SelectTrigger id="set-role" className="w-full">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Administrator</SelectItem>
+                    </SelectContent>
+                </Select>
+            </Field>
             <DialogFooter>
                 <Button variant="outline" onClick={onDone}>
                     Cancel
                 </Button>
-                <Button
-                    onClick={handleSave}
-                    disabled={isPending || !selectedRoles.length}
-                >
+                <Button onClick={handleSave} disabled={isPending}>
                     {isPending ? 'Saving...' : 'Save'}
                 </Button>
             </DialogFooter>
-        </FieldGroup>
+        </>
     );
 }

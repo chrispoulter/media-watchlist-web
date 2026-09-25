@@ -20,9 +20,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { authClient, hasPermission } from '@/lib/auth-client';
 import { useAdminUsers } from '../admin-queries';
-import { RoleBadges, StatusBadge } from './user-badges';
+import { RoleBadge, StatusBadge } from './user-badges';
 import { UserActionsMenu } from './user-actions-menu';
 import { CreateUserDialog } from './create-user-dialog';
 
@@ -30,7 +29,6 @@ const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 300;
 
 export function UsersPage() {
-    const { data: session } = authClient.useSession();
     const [searchParams, setSearchParams] = useSearchParams();
     const search = searchParams.get('q') ?? '';
     const page = Math.max(1, Number(searchParams.get('page')) || 1);
@@ -79,9 +77,7 @@ export function UsersPage() {
                         onChange={(e) => setSearchInput(e.target.value)}
                         className="sm:max-w-xs"
                     />
-                    {hasPermission(session?.user, { user: ['create'] }) && (
-                        <CreateUserDialog />
-                    )}
+                    <CreateUserDialog />
                 </div>
 
                 {error ? (
@@ -118,7 +114,7 @@ export function UsersPage() {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
                                     <TableHead className="hidden md:table-cell">
-                                        Roles
+                                        Role
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
                                         Status
@@ -146,7 +142,7 @@ export function UsersPage() {
                                             {user.email}
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">
-                                            <RoleBadges user={user} />
+                                            <RoleBadge user={user} />
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">
                                             <StatusBadge user={user} />

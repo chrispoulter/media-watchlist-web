@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { Spinner } from '@/components/ui/spinner';
-import { authClient, canAccessAdmin } from '@/lib/auth-client';
+import { authClient, isAdmin } from '@/lib/auth-client';
 
 export function RequireAdmin() {
     const { data: session, isPending } = authClient.useSession();
@@ -18,7 +18,7 @@ export function RequireAdmin() {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (!canAccessAdmin(session.user)) {
+    if (!isAdmin(session.user)) {
         return <Navigate to="/" replace />;
     }
 

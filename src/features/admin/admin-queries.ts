@@ -6,11 +6,12 @@ import {
 } from '@tanstack/react-query';
 import type { UserWithRole } from 'better-auth/plugins/admin';
 import { authClient } from '@/lib/auth-client';
-import type { UserRole } from '@/lib/permissions';
 
 export type AdminUser = UserWithRole & {
     twoFactorEnabled?: boolean | null;
 };
+
+export type UserRole = 'user' | 'admin';
 
 interface ListUsersParams {
     search: string;
@@ -80,7 +81,7 @@ interface CreateUserVariables {
     name: string;
     email: string;
     password: string;
-    role: UserRole[];
+    role: UserRole;
 }
 
 export function useCreateUser() {
@@ -94,22 +95,22 @@ export function useCreateUser() {
 
 interface UpdateUserVariables {
     userId: string;
-    // Including email requires the `user:set-email` permission
-    data: { name: string; email?: string };
+    name: string;
+    email: string;
 }
 
 export function useUpdateAdminUser() {
     const invalidate = useInvalidateAdmin();
     return useMutation({
-        mutationFn: ({ userId, data }: UpdateUserVariables) =>
-            authClient.admin.updateUser({ userId, data }),
+        mutationFn: ({ userId, name, email }: UpdateUserVariables) =>
+            authClient.admin.updateUser({ userId, data: { name, email } }),
         onSuccess: invalidate,
     });
 }
 
 interface SetRoleVariables {
     userId: string;
-    role: UserRole[];
+    role: UserRole;
 }
 
 export function useSetRole() {

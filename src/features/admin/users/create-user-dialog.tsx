@@ -21,16 +21,20 @@ import {
     FieldGroup,
     FieldLabel,
 } from '@/components/ui/field';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useCreateUser } from '../admin-queries';
-import { RoleCheckboxes } from './role-checkboxes';
 
 const createUserSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.email('Enter a valid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
-    role: z
-        .array(z.enum(['user', 'moderator', 'admin']))
-        .min(1, 'Select at least one role'),
+    role: z.enum(['user', 'admin']),
 });
 
 type CreateUserFormValues = z.infer<typeof createUserSchema>;
@@ -64,7 +68,7 @@ function CreateUserForm({ onDone }: { onDone: () => void }) {
 
     const form = useForm<CreateUserFormValues>({
         resolver: zodResolver(createUserSchema),
-        defaultValues: { name: '', email: '', password: '', role: ['user'] },
+        defaultValues: { name: '', email: '', password: '', role: 'user' },
     });
 
     const onSubmit = async (values: CreateUserFormValues) => {
@@ -147,17 +151,28 @@ function CreateUserForm({ onDone }: { onDone: () => void }) {
                 <Controller
                     control={form.control}
                     name="role"
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel>Roles</FieldLabel>
-                            <RoleCheckboxes
-                                idPrefix="create-user-role"
+                    render={({ field }) => (
+                        <Field>
+                            <FieldLabel htmlFor="create-user-role">
+                                Role
+                            </FieldLabel>
+                            <Select
                                 value={field.value}
-                                onChange={field.onChange}
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
+                                onValueChange={field.onChange}
+                            >
+                                <SelectTrigger
+                                    id="create-user-role"
+                                    className="w-full"
+                                >
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="user">User</SelectItem>
+                                    <SelectItem value="admin">
+                                        Administrator
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
                         </Field>
                     )}
                 />
