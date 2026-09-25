@@ -83,6 +83,8 @@ export function useReorderWatchlist() {
     const queryClient = useQueryClient();
 
     return useMutation({
+        // Run reorders one at a time so the last drop is always the last write
+        scope: { id: 'watchlist-reorder' },
         mutationFn: (items: WatchlistResponse) =>
             apiClient.put('/api/watchlist/order', {
                 json: { ids: items.map((item) => item.id) },
